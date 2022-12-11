@@ -5,4 +5,5 @@ public interface IListPosition {
 	IListPosition prev();
 	public void setPrev(IListPosition newPrev);
 
+	public String getStr();
 }

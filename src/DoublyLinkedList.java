@@ -3,6 +3,7 @@ public class DoublyLinkedList {
 	private IListPosition head;
 	private IListPosition tail;
 	private int n;
+
 	public DoublyLinkedList() {
 		head = tail = null;
 		n = 0;
@@ -14,9 +15,26 @@ public class DoublyLinkedList {
 		if(tail == null) { // la lista era vuota (tail -> null)
 			tail = newPosition;
 		} else { // esisteva una head e quindi aggiorno il suo prev
+
 			newPosition.next().setPrev(newPosition); // !!!
+
 		}
 		n++;
+	}
+
+	public DoublyLinkedList insertChain(Object o) {
+		ListPosition newPosition = new ListPosition(o, head, null);
+		head = newPosition;
+		if(tail == null) { // la lista era vuota (tail -> null)
+			tail = newPosition;
+		} else { // esisteva una head e quindi aggiorno il suo prev
+
+			newPosition.next().setPrev(newPosition); // !!!
+
+		}
+		n++;
+		
+		return this;
 	}
 
 	public void printList(){
@@ -30,19 +48,36 @@ public class DoublyLinkedList {
 
 	//Esercizio 2
 	public void swap(IListPosition a, IListPosition b){
-		/*System.out.println("value of a: " + a.value());
-		System.out.println("value of b: " + b.value());
-		IListPosition c = a;
-		a = b;
-		b = c;
+		IListPosition x = a.prev();
+		IListPosition y = a.next();
+		IListPosition z = b.prev();
+		IListPosition w = b.next();
 
-		System.out.println("value of a: " + a.value());
-		System.out.println("value of b: " + b.value());*/
-		IListPosition c = a;
-		a.prev().setNext(b);
+		b.setPrev(x);
+		b.setNext(y);
+		a.setPrev(z);
+		a.setNext(w);
 
+		if(x != null){
+			x.setNext(b);
+		}
+		if(y != null){
+			y.setPrev(b);
+		}
+		if(z != null){
+			z.setNext(a);
+		}
+		if(w != null){
+			w.setPrev(a);
+		}
 
-
+		if( tail == a ){
+			tail = b;
+		}else{
+			if( tail == b ){
+				tail = a;
+			}
+		}
 	}
 
 	//esercizo 1
@@ -57,4 +92,38 @@ public class DoublyLinkedList {
 		}
 		return elem;
 	}
+
+	public int removeBigger(int v){
+		int removed = 0;
+		IListPosition tmp = head;
+		while(tmp != null){
+			if (tmp.value().equals(v)){
+				if (tmp == head){
+					IListPosition x = tmp.next();
+					x.setPrev(null);
+					head = x;
+				}else if(tmp == tail){
+					IListPosition x = tmp.prev();
+					x.setNext(null);
+					tail = x;
+				}else{
+					IListPosition x = tmp.next();
+					IListPosition y = tmp.prev();
+					y.setNext(x);
+					x.setPrev(y);
+					tmp.setNext(null);
+					tmp.setPrev(null);
+					tmp = y;
+				}
+				removed ++;
+			}
+			tmp = tmp.next();
+		}
+		this.n -= removed;
+		return removed;
+	}
+
+
+
+
 }

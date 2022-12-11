@@ -1,3 +1,5 @@
+import java.util.concurrent.RecursiveTask;
+
 public class ListPosition implements IListPosition {
 	private Object content;
 	private IListPosition successor;
@@ -22,7 +24,6 @@ public class ListPosition implements IListPosition {
 	@Override
 	public void setNext(IListPosition newNext) {
 		this.successor = newNext;
-		newNext.setPrev(this.successor);
 	}
 
 	@Override
@@ -33,7 +34,18 @@ public class ListPosition implements IListPosition {
 	@Override
 	public void setPrev(IListPosition newPrev) {
 		this.predecessor = newPrev;
-		newPrev.setNext(this.predecessor);
+	}
+
+	public String getStr(){
+
+		String res = "" + this.content + " -->";
+			IListPosition tmp = this.successor;
+			while(tmp != null){
+				res += " " + tmp.value() + " -->";
+				tmp = tmp.next();
+			}
+			res += " X ";
+		return res;
 	}
 
 }
